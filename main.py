@@ -10,14 +10,28 @@ class Field:
 
 
 class Name(Field):
-    pass
+    def __init__(self, value):
+        if not value or not str(value).strip():
+            raise ValueError("Ім'я не може бути порожнім")
+        super().__init__(value)
 
 
 class Phone(Field):
     def __init__(self, value):
-        if not (value.isdigit() and len(value) == 10):
-            raise ValueError("Номер телефону має містити рівно 10 цифр")
         super().__init__(value)
+
+    def _validate(self, value):
+        return value.isdigit() and len(value) == 10
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if not self._validate(value):
+            raise ValueError("Номер телефону має містити рівно 10 цифр")
+        self._value = value
 
 
 class Record:
